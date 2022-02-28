@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Document</title>
+   
+</head>
+<body>    
+    <canvas id="mainCanvas" width="500" height="500"></canvas>
+
+    <br>
+    
+    <span onclick="clearCanvas(); drawOpenDoor();">Open door</span>
+    <span onclick="clearCanvas(); drawDoor();">Close door</span>
+    <span onclick="clearCanvas(); drawWall();">Draw Wall</span>
+    <span onclick="drawMob();">Draw Mob</span>
+
+    <script>
+        var objcanvas = document.getElementById("mainCanvas");
+        var context= objcanvas.getContext('2d');                
+
+        clearCanvas();
+        drawDoor();
+
+        function clearCanvas() {
+
+            // clear the canvas using clearRect()
+
+            context.beginPath();
+            context.clearRect(0, 0, 500, 500);
+            context.stroke();
+
+        };
+
+        function drawOpenDoor() {
+            
+            context.beginPath();
+            context.rect(50,50,200,200);
+            context.lineWidth=2;
+            context.strokeStyle = 'black';
+            context.stroke();
+
+            context.beginPath();
+            context.rect(100,100,100,150);                    
+            context.lineWidth=2;
+            context.strokeStyle = 'black';
+            context.stroke();
+
+            context.beginPath();
+            context.rect(100,100,10,150);        
+            context.fillStyle = "blue";
+            context.fill();
+            context.lineWidth=2;
+            context.strokeStyle = 'black';
+            context.stroke();
+
+            context.beginPath();
+            context.arc(95,175,5,2 * Math.PI, false);        
+            context.fillStyle = "white";
+            context.fill();
+            context.lineWidth=2;
+            context.strokeStyle = 'black';
+            context.stroke();
+
+        }
+
+        function drawDoor() {
+
+            context.beginPath();
+            context.rect(50,50,200,200);
+            context.lineWidth=2;
+            context.strokeStyle = 'black';
+            context.stroke();
+
+            context.beginPath();
+            context.rect(100,100,100,150);        
+            context.fillStyle = "blue";
+            context.fill();
+            context.lineWidth=2;
+            context.strokeStyle = 'black';
+            context.stroke();
+
+            context.beginPath();
+            context.arc(190,175,5,2 * Math.PI, false);        
+            context.fillStyle = "white";
+            context.fill();
+            context.lineWidth=2;
+            context.strokeStyle = 'black';
+            context.stroke();
+        }
+
+        function drawWall() {
+
+            context.beginPath();
+            context.rect(50,50,200,200);
+            context.lineWidth=2;
+            context.strokeStyle = 'black';
+            context.stroke();
+
+        }
+
+        function drawMob() {
+
+            context.beginPath();
+            context.arc(150, 200, 50, 0, 360);
+            context.fillStyle = 'yellow';
+            context.fill();
+            context.lineWidth=2;
+            context.strokeStyle = 'black';
+            context.stroke();
+
+            context.beginPath();
+            context.arc(150, 150, 25, 0, 360);
+            context.fillStyle = 'red';
+            context.fill();
+            context.lineWidth=2;
+            context.strokeStyle = 'black';
+            context.stroke();
+
+        }
+
+
+    </script>
+</body>
+</html>
