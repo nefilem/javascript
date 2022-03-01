@@ -9,7 +9,7 @@
     <title>Adventure Game</title>
 </head>
 <body>    
-    <canvas id="mainCanvas" width="500" height="500" tabindex="0"></canvas>
+    <canvas id="mainCanvas" width="600" height="600" tabindex="0"></canvas>
     <canvas id="mapCanvas" width="200" height="200" tabindex="1"></canvas>
     <br>
     <button type="button" onclick="moveViaButtons('q');">Turn Left</button>
@@ -23,9 +23,9 @@
     <br>
     <p>Click the text to test</p>
     <br>
-    <span onclick="clearCanvas(); drawOpenDoor();">Open door</span>
-    <span onclick="clearCanvas(); drawDoor();">Close door</span>
-    <span onclick="clearCanvas(); drawWall();">Draw Wall</span>
+    <span onclick="clearCanvas(); drawWall(0);drawOpenDoor(200);drawWall(400);">Open door</span>
+    <span onclick="clearCanvas(); drawDoor(125);">Close door</span>
+    <span onclick="clearCanvas(); drawWall(125);">Draw Wall</span>
     <span onclick="drawMob();">Draw Mob</span>
 
     <script>
@@ -234,19 +234,29 @@
         }
 
         function drawScene() {
+            var tmpVarLeft = -1;
             var tmpVar = 0;
+            var tmpVarRight = -1;
             switch (mazeDirection) {
-                case 0:
+                case 0:                    
                     tmpVar = mazeArr[mazePosY-1][mazePosX];
+                    if ((mazePosX-1)>-1) {tmpVarLeft = mazeArr[mazePosY-1][mazePosX-1];} else tmpVarLeft = -1;
+                    if ((mazePosX+1)<21) {tmpVarRight = mazeArr[mazePosY-1][mazePosX+1];} else tmpVarRight = -1;
                     break;
                 case 1:
                     tmpVar = mazeArr[mazePosY][mazePosX+1];
+                    if ((mazePosY-1)>-1) {tmpVarLeft = mazeArr[mazePosY-1][mazePosX+1];} else tmpVarLeft = -1;
+                    if ((mazePosY+1)<21) {tmpVarRight = mazeArr[mazePosY+1][mazePosX+1];} else tmpVarRight = -1;
                     break;
                 case 2:
                     tmpVar = mazeArr[mazePosY+1][mazePosX];
+                    if ((mazePosX+1)<21) {tmpVarLeft = mazeArr[mazePosY+1][mazePosX+1];} else tmpVarLeft = -1;
+                    if ((mazePosX-1)>-1) {tmpVarRight = mazeArr[mazePosY+1][mazePosX-1];} else tmpVarRight = -1;
                     break;
                 case 3:
                     tmpVar = mazeArr[mazePosY][mazePosX-1];
+                    if ((mazePosY+1)<21) {tmpVarLeft = mazeArr[mazePosY+1][mazePosX-1];} else tmpVarLeft = -1;
+                    if ((mazePosY-1)>-1) {tmpVarRight= mazeArr[mazePosY-1][mazePosX-1];} else tmpVarRight = -1;
                     break;
                 default:
             }
@@ -256,19 +266,59 @@
                     // draw nothing, empty space
                     break;
                 case 1:
-                    drawWall();
+                    drawWall(200);
                     break;
                 case 2:
-                    drawDoor();
+                    drawDoor(200);
                     break;
                 case 3:
-                    drawOpenDoor();
+                    drawOpenDoor(200);
                     break;
                 case 4:
                     break;
                 default:
                     //again draw nothing                
             }
+            switch (tmpVarLeft)
+            {
+                case 0:
+                    // draw nothing, empty space
+                    break;
+                case 1:
+                    drawWall(0);
+                    break;
+                case 2:
+                    drawDoor(0);
+                    break;
+                case 3:
+                    drawOpenDoor(0);
+                    break;
+                case 4:
+                    break;
+                default:
+                    //again draw nothing                
+            }
+
+            switch (tmpVarRight)
+            {
+                case 0:
+                    // draw nothing, empty space
+                    break;
+                case 1:
+                    drawWall(400);
+                    break;
+                case 2:
+                    drawDoor(400);
+                    break;
+                case 3:
+                    drawOpenDoor(400);
+                    break;
+                case 4:
+                    break;
+                default:
+                    //again draw nothing                
+            }
+
         }
 
         function returnNewCoords(mazePosXin, mazePosYin, mazeOrientationin, moveDirectionin) {
@@ -378,7 +428,7 @@
             // clear the canvas using clearRect()
 
             context.beginPath();
-            context.clearRect(0, 0, 500, 500);
+            context.clearRect(0, 0, 600, 600);
             context.stroke();
 
         };
@@ -449,22 +499,22 @@
 
         }
 
-        function drawOpenDoor() {
+        function drawOpenDoor(offset) {
             
             context.beginPath();
-            context.rect(50,50,200,200);
+            context.rect(0+offset,100,200,200);
             context.lineWidth=2;
             context.strokeStyle = 'black';
             context.stroke();
 
             context.beginPath();
-            context.rect(100,100,100,150);                    
+            context.rect(50+offset,150,100,150);                    
             context.lineWidth=2;
             context.strokeStyle = 'black';
             context.stroke();
 
             context.beginPath();
-            context.rect(100,100,10,150);        
+            context.rect(50+offset,150,10,150);        
             context.fillStyle = "blue";
             context.fill();
             context.lineWidth=2;
@@ -472,7 +522,7 @@
             context.stroke();
 
             context.beginPath();
-            context.arc(95,175,5,2 * Math.PI, false);        
+            context.arc(offset+45,225,5,2 * Math.PI, false);        
             context.fillStyle = "white";
             context.fill();
             context.lineWidth=2;
@@ -481,16 +531,16 @@
 
         }
 
-        function drawDoor() {
+        function drawDoor(offset) {
 
             context.beginPath();
-            context.rect(50,50,200,200);
+            context.rect(0+offset,100,200,200);
             context.lineWidth=2;
             context.strokeStyle = 'black';
             context.stroke();
 
             context.beginPath();
-            context.rect(100,100,100,150);        
+            context.rect(50+offset,150,100,150);        
             context.fillStyle = "blue";
             context.fill();
             context.lineWidth=2;
@@ -498,7 +548,7 @@
             context.stroke();
 
             context.beginPath();
-            context.arc(190,175,5,2 * Math.PI, false);        
+            context.arc(140+offset,225,5,2 * Math.PI, false);        
             context.fillStyle = "white";
             context.fill();
             context.lineWidth=2;
@@ -506,10 +556,10 @@
             context.stroke();
         }
 
-        function drawWall() {
+        function drawWall(offset) {
 
             context.beginPath();
-            context.rect(50,50,200,200);
+            context.rect(0+offset,100,200,200);
             context.lineWidth=2;
             context.strokeStyle = 'black';
             context.stroke();
