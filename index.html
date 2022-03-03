@@ -9,9 +9,10 @@
     <title>Adventure Game</title>
 </head>
 <body>    
-    <canvas id="mainCanvas" width="600" height="600" tabindex="0"></canvas>
-    <canvas id="mapCanvas" width="200" height="200" tabindex="1"></canvas>
+    <canvas id="mainCanvas" width="600" height="400" tabindex="0"></canvas>
     <br>
+    <canvas id="mapCanvas" width="200" height="200" tabindex="1" style="display:inline-block;"></canvas>
+    <div id="mobilecontrols" style="display:inline-block;">
     <button type="button" onclick="moveViaButtons('q');">Turn Left</button>
     <button type="button" onclick="moveViaButtons('w');">Move Forward</button>
     <button type="button" onclick="moveViaButtons('e');">Turn Right</button>
@@ -19,6 +20,7 @@
     <button type="button" onclick="moveViaButtons('a');">Move Left</button>
     <button type="button" onclick="moveViaButtons('s');">Move Backwards</button>
     <button type="button" onclick="moveViaButtons('d');">Move Right</button>    
+    </div>
 
     <br>
     <p>Click the text to test</p>
@@ -29,14 +31,14 @@
     <span onclick="drawMob();">Draw Mob</span>
 
     <script>
-        var objcanvas = document.getElementById("mainCanvas");
-        var context= objcanvas.getContext('2d');                
+        let objcanvas = document.getElementById("mainCanvas");
+        let context= objcanvas.getContext('2d');                
 
-        var objmapcanvas = document.getElementById("mapCanvas");
-        var mapcontext= objmapcanvas.getContext('2d');                
+        let objmapcanvas = document.getElementById("mapCanvas");
+        let mapcontext= objmapcanvas.getContext('2d');                
 
-        var mazeDirection = 0; // 0 is north, 1 is east, 2 is south, 3 is west.
-        var mazeArr = new Array();
+        let mazeDirection = 0; // 0 is north, 1 is east, 2 is south, 3 is west.
+        let mazeArr = new Array();
         mazeArr[0]  = new Array(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
         mazeArr[1]  = new Array(1,0,0,0,0,1,0,0,0,0,2,0,0,0,0,0,0,0,0,1);
         mazeArr[2]  = new Array(1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,1);
@@ -57,10 +59,54 @@
         mazeArr[17] = new Array(1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1);
         mazeArr[18] = new Array(1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1);
         mazeArr[19] = new Array(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
-                   
-        var mazePosX = 1;
-        var mazePosY = 1;
-        var mazePosZ = 1; // would be which floor effectively if there were stairs.
+
+        let mazeRoomDescriptionsIDs = Array();
+        mazeRoomDescriptionsIDs[0]  = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[1]  = Array(0,1,1,1,1,0,6,6,6,7,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[2]  = Array(0,1,1,1,1,0,6,8,6,6,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[3]  = Array(0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[4]  = Array(0,0,0,0,2,2,2,3,2,2,2,2,2,2,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[5]  = Array(0,0,0,0,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[6]  = Array(0,0,0,4,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[7]  = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[8]  = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[9]  = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[10] = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[11] = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[12] = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[13] = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[14] = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[15] = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[16] = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[17] = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[18] = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+        mazeRoomDescriptionsIDs[19] = Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+
+        let mazeRoomDescriptions = Array();
+        mazeRoomDescriptions[0]  = Array("");
+        mazeRoomDescriptions[1]  = Array("Before you is a darkly lit entry hall, the floors are very dusty.");
+        mazeRoomDescriptions[2]  = Array("You stand in the reception room, more lighting in this room reveals gold tabbards", "hanging from the walls.");
+        mazeRoomDescriptions[3]  = Array("You stand in the reception room, nearby a large open door reveals a dimly lit room within.");
+        mazeRoomDescriptions[4]  = Array("A small alcove within the reception room.");
+        mazeRoomDescriptions[5]  = Array("You are in a corridor between rooms.");
+        mazeRoomDescriptions[6]  = Array("");
+        mazeRoomDescriptions[7]  = Array("");
+        mazeRoomDescriptions[8]  = Array("");
+        mazeRoomDescriptions[9]  = Array("");
+        mazeRoomDescriptions[10] = Array("");
+        mazeRoomDescriptions[11] = Array("");
+        mazeRoomDescriptions[12] = Array("");
+        mazeRoomDescriptions[13] = Array("");
+        mazeRoomDescriptions[14] = Array("");
+        mazeRoomDescriptions[15] = Array("");
+        mazeRoomDescriptions[16] = Array("");
+        mazeRoomDescriptions[17] = Array("");
+        mazeRoomDescriptions[18] = Array("");
+        mazeRoomDescriptions[19] = Array("");
+
+        let mazePosX = 1;
+        let mazePosY = 1;
+        let mazePosZ = 1; // would be which floor effectively if there were stairs.
 
         clearCanvas();
         clearMapCanvas();
@@ -78,7 +124,7 @@
                     mazeCoordsArr = returnNewCoords(mazePosX, mazePosY, mazeDirection, 0);
                     //alert("w pressed");                                
                     if ((mazeCoordsArr[1]) > 0) {                                                
-                        var tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
+                        let tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
                         // 1 is wall, 2 is closed door
                         if (tmpVar != 1 && tmpVar != 2) {
                             mazePosX = mazeCoordsArr[0];
@@ -91,7 +137,7 @@
                     mazeCoordsArr = returnNewCoords(mazePosX, mazePosY, mazeDirection, 1);
                     //alert("d pressed");
                     if ((mazeCoordsArr[0]) < 20) {                        
-                        var tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
+                        let tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
                         // 1 is wall, 2 is closed door
                         if (tmpVar != 1 && tmpVar != 2) {
                             mazePosX = mazeCoordsArr[0];
@@ -104,7 +150,7 @@
                     mazeCoordsArr = returnNewCoords(mazePosX, mazePosY, mazeDirection, 3);
                     //alert("a pressed");
                     if ((mazeCoordsArr[0]) > 0) {                        
-                        var tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
+                        let tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
                         // 1 is wall, 2 is closed door
                         if (tmpVar != 1 && tmpVar != 2) {
                             mazePosX = mazeCoordsArr[0];
@@ -117,7 +163,7 @@
                     mazeCoordsArr = returnNewCoords(mazePosX, mazePosY, mazeDirection, 2);
                     //alert("s pressed");
                     if ((mazeCoordsArr[1]) < 20) {
-                        var tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
+                        let tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
                         // 1 is wall, 2 is closed door
                         if (tmpVar != 1 && tmpVar != 2) {
                             mazePosX = mazeCoordsArr[0];
@@ -164,7 +210,7 @@
                     mazeCoordsArr = returnNewCoords(mazePosX, mazePosY, mazeDirection, 0);
                     //alert("w pressed");                                
                     if ((mazeCoordsArr[1]) > 0) {                                                
-                        var tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
+                        let tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
                         // 1 is wall, 2 is closed door
                         if (tmpVar != 1 && tmpVar != 2) {
                             mazePosX = mazeCoordsArr[0];
@@ -177,7 +223,7 @@
                     mazeCoordsArr = returnNewCoords(mazePosX, mazePosY, mazeDirection, 1);
                     //alert("d pressed");
                     if ((mazeCoordsArr[0]) < 20) {                        
-                        var tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
+                        let tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
                         // 1 is wall, 2 is closed door
                         if (tmpVar != 1 && tmpVar != 2) {
                             mazePosX = mazeCoordsArr[0];
@@ -190,7 +236,7 @@
                     mazeCoordsArr = returnNewCoords(mazePosX, mazePosY, mazeDirection, 3);
                     //alert("a pressed");
                     if ((mazeCoordsArr[0]) > 0) {                        
-                        var tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
+                        let tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
                         // 1 is wall, 2 is closed door
                         if (tmpVar != 1 && tmpVar != 2) {
                             mazePosX = mazeCoordsArr[0];
@@ -203,7 +249,7 @@
                     mazeCoordsArr = returnNewCoords(mazePosX, mazePosY, mazeDirection, 2);
                     //alert("s pressed");
                     if ((mazeCoordsArr[1]) < 20) {
-                        var tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
+                        let tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
                         // 1 is wall, 2 is closed door
                         if (tmpVar != 1 && tmpVar != 2) {
                             mazePosX = mazeCoordsArr[0];
@@ -234,9 +280,9 @@
         }
 
         function drawScene() {
-            var tmpVarLeft = -1;
-            var tmpVar = 0;
-            var tmpVarRight = -1;
+            let tmpVarLeft = -1;
+            let tmpVar = 0;
+            let tmpVarRight = -1;
             switch (mazeDirection) {
                 case 0:                    
                     tmpVar = mazeArr[mazePosY-1][mazePosX];
@@ -319,6 +365,34 @@
                     //again draw nothing                
             }
 
+            drawDescription(mazePosX, mazePosY);
+
+        }
+
+        function drawDescription(xPos, yPos)
+        {
+            // checks for description in mazeDescriptionIDs, if the value is 0 no description is available.
+            let mazeID = 0;
+
+            mazeID = mazeRoomDescriptionsIDs[yPos][xPos];
+
+            context.font = "15px Arial";
+            context.fillStyle = 'black';
+            let textOffset = 0;
+
+            if (mazeID != 0) {
+                //context.fillText(mazeRoomDescriptions[mazeID], 5, 325+textOffset);                
+                mazeRoomDescriptions[mazeID].forEach((item, index, array) => { 
+                    /*array.forEach((item) => { 
+                        context.fillText(item, 5, 325+textOffset);
+                        textOffset+=20;
+                    } */
+                    context.fillText(item, 5, 325+textOffset);
+                    textOffset+=20;
+                });
+            } else {
+                context.fillText("No description", 5, 325);
+            }
         }
 
         function returnNewCoords(mazePosXin, mazePosYin, mazeOrientationin, moveDirectionin) {
@@ -432,7 +506,6 @@
             context.stroke();
 
         };
-
         
         function clearMapCanvas() {
 
