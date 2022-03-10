@@ -5,10 +5,18 @@
      * @param  {Number} xPos - X position on the grid
      * @param  {Number} yPos - Y position on the grid
      */        
-    constructor(xPos, yPos) {
+    constructor(xPos, yPos, mainContext, mobContext) {
         this._xPos = xPos;
         this._yPos = yPos;        
+        this._mainContext = mainContext;
+        this._mobContext = mobContext;
     }
+
+    // _objcanvas = document.getElementById("mainCanvas");
+    // _mainContext = this._objcanvas.getContext('2d');                
+
+    // _objmobcanvas = document.getElementById("mobDescCanvas");
+    // _mobContext = this._objmobcanvas.getContext('2d');                
 
     _lootTableArray = Array();
 
@@ -31,19 +39,24 @@
     xPos() {
         return Number(this._xPos);
     }
-    
-    /**
+
+    /**     
      * Returns the y position in the maze
      */
     yPos() {
         return Number(this._yPos);        
     } 
 
+    /**
+     * @param  {} player
+     */
     setAggro(player) {
         _enemy = player;
         _aggressive = true;
     }
 
+    /**
+     */
     attackPlayer() {
         if (this._aggressive == true && this._enemy != null) {
             this._enemy.attacked(this._damage);
@@ -51,14 +64,16 @@
                 this._aggressive = false;
                 this._enemy = null;
             } 
-            this._aggressiveCount -= 1;
-            if(this._aggressiveCount>0) {
-                window.clearInterval(this._t);
-                this._t = setInterval(this.attackPlayer(), 20000);
-            } else { window.clearInterval(this._t); }
+            // the below was going to be added to have the mob auto attack but was causing stack issues
+            // this._aggressiveCount -= 1;
+            // if(this._aggressiveCount>0) {
+            //     window.clearInterval(this._t);
+            //     this._t = setInterval(this.attackPlayer(), 50000);
+            // } else { window.clearInterval(this._t); }
         }        
         
     }
+    
     /**
      * When attacking with a weapon this function is called, calculates whether the resulting damage 
      * kills the mob or not and also updates the descriptive text.
@@ -69,7 +84,8 @@
         this._enemy = enemy;
         this._aggressive = true;
         this._aggressiveCount = 6;
-        this._t = setInterval(this.attackPlayer(), 20000);        
+        //this._t = setInterval(this.attackPlayer(), 50000);        
+        this.attackPlayer();
 
         if (this._hitPoints < 1) {
             this._status = 0;
@@ -100,116 +116,109 @@
         });
     }
     
-    lootItems(newOwner, context) {
+    /**
+     * @param  {} newOwner
+     */
+    lootItems(newOwner) {
         //return Array.map(this._lootTableArray);
-        if (this.isAlive == true) {
-            this.drawMobDescription(context, "The " + this._mobName + " looks at you angrily as you try to loot it's items.");                        
+        if (this.isAlive() == true) {
+            this.drawMobDescription("The " + this._mobName + " looks at you angrily as you try to loot it's items.");                        
         } else {
             this._lootTableArray.forEach(element => {
                 newOwner.putIntoInventory(element);
             });
             this._lootTableArray = Array();
-            this.drawMobDescription(context, "You looted all the items from the slain " + this._mobName);
+            //this.drawMobDescription("You looted all the items from the slain " + this._mobName);
+            newOwner.drawPlayerDescription("You looted all the items from the slain " + this._mobName);
         }
     }
 
-    /**
-     * @param  {} context - pointer to canvas
+    /**     
      */
-    drawMob(context) {
+    drawMob() {
         
         let mobText = this._mobName;
         if (this._status == 1) {
-            this.drawMobAlive(context, 200);
+            this.drawMobAlive(200);
             mobText += " stands menacingly before you with " + this._hitPoints + " health."
         } else { 
-            this.drawMobDead(context, 200);
-            mobText += " lies dead in front of you.";
+            this.drawMobDead(200);
+            mobText += " lays dead in front of you.";
         }        
 
-        context.font = "15px Arial";
-        context.fillStyle = 'black';        
-        context.fillText(mobText, 5, 375);
+        // this._mobContext.font = "15px Arial";
+        // this._mobContext.fillStyle = 'black';        
+        // this._mobContext.fillText(mobText, 5, 375);
+        this.drawMobDescription(mobText);
     }
-    
-    /*function drawWall(offset) {
-
-        context.beginPath();
-        context.rect(0+offset,100,200,200);
-        context.lineWidth=2;
-        context.strokeStyle = 'black';
-        context.stroke();
-    
-    }*/
 
     /**
-     * @param  {} context - pointer to canvas
+     * @param  {} offset - x offset position to draw mob
      */
-    drawMobAlive(context, offset) {        
+    drawMobAlive(offset) {        
 
-        context.beginPath();
-        context.arc(150+offset, 250, 50, 0, 360);
-        context.fillStyle = 'yellow';
-        context.fill();
-        context.lineWidth=2;
-        context.strokeStyle = 'black';
-        context.stroke();
+        this._mainContext.beginPath();
+        this._mainContext.arc(150+offset, 250, 50, 0, 360);
+        this._mainContext.fillStyle = 'yellow';
+        this._mainContext.fill();
+        this._mainContext.lineWidth=2;
+        this._mainContext.strokeStyle = 'black';
+        this._mainContext.stroke();
     
-        context.beginPath();
-        context.arc(150+offset, 200, 25, 0, 360);
-        context.fillStyle = 'red';
-        context.fill();
-        context.lineWidth=2;
-        context.strokeStyle = 'black';
-        context.stroke();
+        this._mainContext.beginPath();
+        this._mainContext.arc(150+offset, 200, 25, 0, 360);
+        this._mainContext.fillStyle = 'red';
+        this._mainContext.fill();
+        this._mainContext.lineWidth=2;
+        this._mainContext.strokeStyle = 'black';
+        this._mainContext.stroke();
     
     }
     
     /**
-     * @param  {} context - pointer to canvas
+     * @param  {} offset - allows horizontal positioning on the canvas
      */
-    drawMobDead(context, offset) {        
+    drawMobDead(offset) {        
 
-        context.beginPath();
-        context.arc(150+offset, 250, 50, 0, 360);
-        context.fillStyle = 'grey';
-        context.fill();
-        context.lineWidth=2;
-        context.strokeStyle = 'black';
-        context.stroke();
+        this._mainContext.beginPath();
+        this._mainContext.arc(150+offset, 250, 50, 0, 360);
+        this._mainContext.fillStyle = 'grey';
+        this._mainContext.fill();
+        this._mainContext.lineWidth=2;
+        this._mainContext.strokeStyle = 'black';
+        this._mainContext.stroke();
     
-        context.beginPath();
-        context.arc(200+offset, 250, 25, 0, 360);
-        context.fillStyle = 'grey';
-        context.fill();
-        context.lineWidth=2;
-        context.strokeStyle = 'black';
-        context.stroke();
+        this._mainContext.beginPath();
+        this._mainContext.arc(200+offset, 250, 25, 0, 360);
+        this._mainContext.fillStyle = 'grey';
+        this._mainContext.fill();
+        this._mainContext.lineWidth=2;
+        this._mainContext.strokeStyle = 'black';
+        this._mainContext.stroke();
     
     }
     
     /**
-     * @param  {} context - pointer to canvas
      * @param  {} textToDraw - text to draw in mob canvas area
      */
-    drawMobDescription(context, textToDraw) {
+    drawMobDescription(textToDraw) {
 
-        this.clearMobCanvas(context);
-        context.font = "15px Arial";
-        context.fillStyle = 'black';        
-        context.fillText(textToDraw, 5, 375);
+        this.clearMobCanvas();
+        this._mobContext.font = "15px Arial";
+        this._mobContext.fillStyle = '#000000';        
+        this._mobContext.fillText(textToDraw, 5, 15);
     }
     
     /**
      * @param  {} context - pointer to canvas
      */
-    clearMobCanvas(context) {
+    clearMobCanvas() {
 
         // clear the area used by mob text on canvas using clearRect()
-    
-        context.beginPath();
-        context.clearRect(0, 375, 600, 425);
-        context.stroke();
+            
+        this._mobContext.clearRect(0, 0, 600, 100);
+        this._mobContext.stroke();
+        this._mobContext.beginPath();
     
     };
 }

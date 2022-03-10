@@ -4,6 +4,15 @@ let context = objcanvas.getContext('2d');
 let objmapcanvas = document.getElementById("mapCanvas");
 let mapcontext= objmapcanvas.getContext('2d');                
 
+let objroomcanvas = document.getElementById("roomDescCanvas");
+let roomContext= objroomcanvas.getContext('2d'); 
+
+let objplayercanvas = document.getElementById("playerDescCanvas");
+let playerContext = objplayercanvas.getContext('2d');
+
+let objmobcanvas = document.getElementById("mobDescCanvas");
+let mobContext = objmobcanvas.getContext('2d');    
+
 let mazeDirection = 0; // 0 is north, 1 is east, 2 is south, 3 is west.
 
 let mazePosX = 1;
@@ -11,11 +20,11 @@ let mazePosY = 1;
 let mazePosZ = 1; // would be which floor effectively if there were stairs.
 
  // create a new mob in a corridor for testing
- let enemy = new mobYellowBlob(7, 1);
- enemy.createItem(new itemMagicalPendant(enemy));
- let player = new playerClass(context);
+ let enemy = new mobYellowBlob(7, 1, context, mobContext);
+ enemy.createItem(new itemMagicalPendant(enemy, context, playerContext));
+ let player = new playerClass(context, playerContext);
  let weapon = new weaponWoodenSword(player);
- player.createItem(new itemHealthPotion(player));
+ player.createItem(new itemHealthPotion(player, context, playerContext));
 
 // initial drawing of scene
 clearCanvas();
@@ -37,20 +46,23 @@ $('#mainCanvas').on('keydown', function(event) {
         switch(event.keyCode)
         {
             case 72: // h
-                player.useHealthPotion(context);
+                player.useHealthPotion();
                 ignoreRedraw = true;
                 break;
             case 82: // r
                 // loot the enemy
-                enemy.lootItems(player, context);
+                if (enemy.xPos() == mazePosX && enemy.yPos() == mazePosY && !enemy.isAlive())
+                {
+                    enemy.lootItems(player);
+                }
                 ignoreRedraw = true;
                 break;
             case 32:  // [space bar]
                 // attack the enemy!!
                 if (enemy.xPos() == mazePosX && enemy.yPos() == mazePosY && enemy.isAlive() == true) {
-                    enemy.drawMobDescription(context, weapon.attack(enemy));
+                    enemy.drawMobDescription(weapon.attack(enemy));
                 }
-                ignoreRedraw = true;
+                //ignoreRedraw = true;
                 break;
             case 87:
                 mazeCoordsArr = returnNewCoords(mazePosX, mazePosY, mazeDirection, 0);
@@ -124,10 +136,18 @@ $('#mainCanvas').on('keydown', function(event) {
         //console.log("X:" + mazePosX + ", Y:" + mazePosY + ", Direction:" + mazeDirection);
 
         if (ignoreRedraw == false) {
-            clearCanvas();
-            drawScene();
-            clearMapCanvas();
-            drawMap();
+            if (player.hasWon()) {
+                drawWinningScene();
+            } else {
+                clearCanvas();
+                drawScene();
+                clearMapCanvas();
+                drawMap();
+            }
+        } 
+    } else {
+        if (!player.isAlive()) {
+            drawLosingScene();
         } 
     }
 });

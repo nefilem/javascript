@@ -79,6 +79,8 @@
     drawMap();
 }
 
+/**
+ */
 function drawScene() {
     let tmpVarLeft = -1;
     let tmpVar = 0;
@@ -174,6 +176,10 @@ function drawScene() {
 
 }
 
+/**
+ * @param  {} xPos
+ * @param  {} yPos
+ */
 function drawDescription(xPos, yPos)
 {
     // checks for description in mazeDescriptionIDs, if the value is 0 no description is available.
@@ -181,9 +187,11 @@ function drawDescription(xPos, yPos)
 
     mazeID = mazeRoomDescriptionsIDs[yPos][xPos];
 
-    context.font = "15px Arial";
-    context.fillStyle = 'black';
-    let textOffset = 0;
+    roomContext.clearRect(0, 0, roomContext.canvas.width, roomContext.canvas.height)
+
+    roomContext.font = "15px Arial";
+    roomContext.fillStyle = '#000000';
+    let textOffset = 15;
 
     if (mazeID != 0) {
         //context.fillText(mazeRoomDescriptions[mazeID], 5, 325+textOffset);                
@@ -192,14 +200,20 @@ function drawDescription(xPos, yPos)
                 context.fillText(item, 5, 325+textOffset);
                 textOffset+=20;
             } */
-            context.fillText(item, 5, 325+textOffset);
+            roomContext.fillText(item, 5, 0+textOffset);
             textOffset+=20;
         });
     } else {
-        context.fillText("No description", 5, 325);
+        roomContext.fillText("No description", 5, 0);
     }
 }
 
+/**
+ * @param  {} mazePosXin
+ * @param  {} mazePosYin
+ * @param  {} mazeOrientationin
+ * @param  {} moveDirectionin
+ */
 function returnNewCoords(mazePosXin, mazePosYin, mazeOrientationin, moveDirectionin) {
 
     let mazeCoordsArr = [];
@@ -302,6 +316,8 @@ function returnNewCoords(mazePosXin, mazePosYin, mazeOrientationin, moveDirectio
     return mazeCoordsArr;
 }
 
+/**
+ */
 function clearCanvas() {
 
     // clear the canvas using clearRect()
@@ -312,6 +328,8 @@ function clearCanvas() {
 
 };
 
+/**
+ */
 function clearMapCanvas() {
 
     // clear the canvas using clearRect()
@@ -322,11 +340,17 @@ function clearMapCanvas() {
 
 };
 
+/**
+ */
 function drawMap()
 {
     mazeArr.forEach((itemY, indexY, arrayY) => itemY.forEach((itemX, indexX, arrayX) => drawMapBlock(indexX, indexY)));
 }
 
+/**
+ * @param  {} posX
+ * @param  {} posY
+ */
 function drawMapBlock(posX, posY)
 {
     mapcontext.beginPath();
@@ -377,6 +401,9 @@ function drawMapBlock(posX, posY)
 
 }
 
+/**
+ * @param  {} offset
+ */
 function drawOpenDoor(offset) {
     
     context.beginPath();
@@ -409,6 +436,9 @@ function drawOpenDoor(offset) {
 
 }
 
+/**
+ * @param  {} offset
+ */
 function drawDoor(offset) {
 
     context.beginPath();
@@ -434,6 +464,9 @@ function drawDoor(offset) {
     context.stroke();
 }
 
+/**
+ * @param  {} offset
+ */
 function drawWall(offset) {
 
     context.beginPath();
@@ -442,4 +475,21 @@ function drawWall(offset) {
     context.strokeStyle = 'black';
     context.stroke();
 
+}
+
+/**
+ */
+function drawWinningScene() {
+    //this.clearMobCanvas();
+    context.font = "99px Arial";
+    context.fillStyle = '#000000';        
+    context.fillText("You Won!!!", 5, 100);
+}
+
+/**
+ */
+function drawLosingScene() {
+    context.font = "99px Arial";
+    context.fillStyle = '#000000';        
+    context.fillText("You Lost!!!", 5, 100);
 }

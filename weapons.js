@@ -1,4 +1,7 @@
 class weaponWoodenSword {
+    /**
+     * @param  {class player} owner
+     */
     constructor(owner) {
         this._owner = owner;
     }
@@ -7,7 +10,7 @@ class weaponWoodenSword {
     _damage = 25;
     
     /**
-     * @param  {} mob - pass in the mob class to attack
+     * @param  {class mob} mob - pass in the mob class to attack
      */
     attack(mob) {
         return mob.attacked(this._damage, this._owner);
