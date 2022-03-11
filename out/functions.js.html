@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: functions.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: functions.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * This routine is used for the buttons on screen for accessibility purposes/mobile use
+ * 
+ * @param  {} buttonID - the id for the button that you want to move using, ie. q, w, e, a, s, d
+ */
+ function moveViaButtons(buttonID) {
+    let mazeCoordsArr = [];
+
+    switch(buttonID)
+    {
+        case "w":
+            mazeCoordsArr = returnNewCoords(mazePosX, mazePosY, mazeDirection, 0);
+            //alert("w pressed");                                
+            if ((mazeCoordsArr[1]) > 0) {                                                
+                let tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
+                // 1 is wall, 2 is closed door
+                if (tmpVar != 1 &amp;&amp; tmpVar != 2) {
+                    mazePosX = mazeCoordsArr[0];
+                    mazePosY = mazeCoordsArr[1];
+                } 
+            }
+            break;
+
+        case "d":
+            mazeCoordsArr = returnNewCoords(mazePosX, mazePosY, mazeDirection, 1);
+            //alert("d pressed");
+            if ((mazeCoordsArr[0]) &lt; 20) {                        
+                let tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
+                // 1 is wall, 2 is closed door
+                if (tmpVar != 1 &amp;&amp; tmpVar != 2) {
+                    mazePosX = mazeCoordsArr[0];
+                    mazePosY = mazeCoordsArr[1];
+                } 
+            }
+            break;
+
+        case "a":
+            mazeCoordsArr = returnNewCoords(mazePosX, mazePosY, mazeDirection, 3);
+            //alert("a pressed");
+            if ((mazeCoordsArr[0]) > 0) {                        
+                let tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
+                // 1 is wall, 2 is closed door
+                if (tmpVar != 1 &amp;&amp; tmpVar != 2) {
+                    mazePosX = mazeCoordsArr[0];
+                    mazePosY = mazeCoordsArr[1];
+                } 
+            }
+            break;
+
+        case "s":
+            mazeCoordsArr = returnNewCoords(mazePosX, mazePosY, mazeDirection, 2);
+            //alert("s pressed");
+            if ((mazeCoordsArr[1]) &lt; 20) {
+                let tmpVar = mazeArr[mazeCoordsArr[1]][mazeCoordsArr[0]];
+                // 1 is wall, 2 is closed door
+                if (tmpVar != 1 &amp;&amp; tmpVar != 2) {
+                    mazePosX = mazeCoordsArr[0];
+                    mazePosY = mazeCoordsArr[1];
+                } 
+            }
+            break;
+
+        case "e":
+            // q turn left
+            mazeDirection++;
+            if (mazeDirection > 3) { mazeDirection = 0;};
+            break;
+
+        case "q":
+            // e turn right
+            --mazeDirection;
+            if (mazeDirection &lt; 0) { mazeDirection = 3;};
+            break;
+        
+        default:
+    }
+    
+    clearCanvas();
+    drawScene();
+    clearMapCanvas();
+    drawMap();
+}
+
+/**
+ * This routine controls the drawing of the players view on the world.
+ */
+function drawScene() {
+    let tmpVarLeft = -1;
+    let tmpVar = 0;
+    let tmpVarRight = -1;
+    switch (mazeDirection) {
+        case 0:                    
+            tmpVar = mazeArr[mazePosY-1][mazePosX];
+            if ((mazePosX-1)>-1) {tmpVarLeft = mazeArr[mazePosY-1][mazePosX-1];} else tmpVarLeft = -1;
+            if ((mazePosX+1)&lt;21) {tmpVarRight = mazeArr[mazePosY-1][mazePosX+1];} else tmpVarRight = -1;
+            break;
+        case 1:
+            tmpVar = mazeArr[mazePosY][mazePosX+1];
+            if ((mazePosY-1)>-1) {tmpVarLeft = mazeArr[mazePosY-1][mazePosX+1];} else tmpVarLeft = -1;
+            if ((mazePosY+1)&lt;21) {tmpVarRight = mazeArr[mazePosY+1][mazePosX+1];} else tmpVarRight = -1;
+            break;
+        case 2:
+            tmpVar = mazeArr[mazePosY+1][mazePosX];
+            if ((mazePosX+1)&lt;21) {tmpVarLeft = mazeArr[mazePosY+1][mazePosX+1];} else tmpVarLeft = -1;
+            if ((mazePosX-1)>-1) {tmpVarRight = mazeArr[mazePosY+1][mazePosX-1];} else tmpVarRight = -1;
+            break;
+        case 3:
+            tmpVar = mazeArr[mazePosY][mazePosX-1];
+            if ((mazePosY+1)&lt;21) {tmpVarLeft = mazeArr[mazePosY+1][mazePosX-1];} else tmpVarLeft = -1;
+            if ((mazePosY-1)>-1) {tmpVarRight= mazeArr[mazePosY-1][mazePosX-1];} else tmpVarRight = -1;
+            break;
+        default:
+    }
+    switch (tmpVar)
+    {
+        case 0:
+            // draw nothing, empty space
+            break;
+        case 1:
+            drawWall(200);
+            break;
+        case 2:
+            drawDoor(200);
+            break;
+        case 3:
+            drawOpenDoor(200);
+            break;
+        case 4:
+            break;
+        default:
+            //again draw nothing                
+    }
+    switch (tmpVarLeft)
+    {
+        case 0:
+            // draw nothing, empty space
+            break;
+        case 1:
+            drawWall(0);
+            break;
+        case 2:
+            drawDoor(0);
+            break;
+        case 3:
+            drawOpenDoor(0);
+            break;
+        case 4:
+            break;
+        default:
+            //again draw nothing                
+    }
+
+    switch (tmpVarRight)
+    {
+        case 0:
+            // draw nothing, empty space
+            break;
+        case 1:
+            drawWall(400);
+            break;
+        case 2:
+            drawDoor(400);
+            break;
+        case 3:
+            drawOpenDoor(400);
+            break;
+        case 4:
+            break;
+        default:
+            //again draw nothing                
+    }
+
+    drawDescription(mazePosX, mazePosY);
+
+    // check if we have a mob in front of us
+    if (enemy.xPos() == mazePosX &amp;&amp; enemy.yPos() == mazePosY) {
+        enemy.drawMob(context);        
+    }    
+
+}
+
+/**
+ * draw the text relating to the players view on the world
+ * 
+ * @param  {} xPos
+ * @param  {} yPos
+ */
+function drawDescription(xPos, yPos)
+{
+    // checks for description in mazeDescriptionIDs, if the value is 0 no description is available.
+    let mazeID = 0;
+
+    mazeID = mazeRoomDescriptionsIDs[yPos][xPos];
+
+    roomContext.clearRect(0, 0, roomContext.canvas.width, roomContext.canvas.height)
+
+    roomContext.font = "15px Arial";
+    roomContext.fillStyle = '#000000';
+    let textOffset = 15;
+
+    if (mazeID != 0) {
+        //context.fillText(mazeRoomDescriptions[mazeID], 5, 325+textOffset);                
+        mazeRoomDescriptions[mazeID].forEach((item, index, array) => { 
+            /*array.forEach((item) => { 
+                context.fillText(item, 5, 325+textOffset);
+                textOffset+=20;
+            } */
+            roomContext.fillText(item, 5, 0+textOffset);
+            textOffset+=20;
+        });
+    } else {
+        roomContext.fillText("No description", 5, 0);
+    }
+}
+
+/**
+ * Updates the player position based on direction facing, movement direction.
+ * 
+ * @param  {} mazePosXin
+ * @param  {} mazePosYin
+ * @param  {} mazeOrientationin
+ * @param  {} moveDirectionin
+ */
+function returnNewCoords(mazePosXin, mazePosYin, mazeOrientationin, moveDirectionin) {
+
+    let mazeCoordsArr = [];
+    switch(mazeOrientationin)
+    {
+        case 0: // north
+            switch(moveDirectionin)
+            {
+                case 0: //forward
+                    mazeCoordsArr[0] = mazePosXin;
+                    mazeCoordsArr[1] = mazePosYin-1;
+                    break;
+                case 1: //right                            
+                    mazeCoordsArr[0] = mazePosXin+1;
+                    mazeCoordsArr[1] = mazePosYin;
+                    break;
+                case 2: //backwards
+                    mazeCoordsArr[0] = mazePosXin;
+                    mazeCoordsArr[1] = mazePosYin+1;
+                    break;
+                case 3: //left                            
+                    mazeCoordsArr[0] = mazePosXin-1;
+                    mazeCoordsArr[1] = mazePosYin;
+                    break;
+                default:
+            }
+            break;
+        case 1: //east
+        
+            switch(moveDirectionin)
+            {
+                case 0: //forward
+                    mazeCoordsArr[0] = mazePosXin+1;
+                    mazeCoordsArr[1] = mazePosYin;
+                    break;
+                case 1: //right                            
+                    mazeCoordsArr[0] = mazePosXin;
+                    mazeCoordsArr[1] = mazePosYin+1;
+                    break;
+                case 2: //backwards
+                    mazeCoordsArr[0] = mazePosXin-1;
+                    mazeCoordsArr[1] = mazePosYin;
+                    break;
+                case 3: //left                            
+                    mazeCoordsArr[0] = mazePosXin;
+                    mazeCoordsArr[1] = mazePosYin-1;
+                    break;
+                default:
+            }
+            break;
+        case 2://south
+            switch(moveDirectionin)
+            {
+                case 0: //forward
+                    mazeCoordsArr[0] = mazePosXin;
+                    mazeCoordsArr[1] = mazePosYin+1;
+                    break;
+                case 1: //right                            
+                    mazeCoordsArr[0] = mazePosXin-1;
+                    mazeCoordsArr[1] = mazePosYin;
+                    break;
+                case 2: //backwards
+                    mazeCoordsArr[0] = mazePosXin;
+                    mazeCoordsArr[1] = mazePosYin-1;
+                    break;
+                case 3: //left                            
+                    mazeCoordsArr[0] = mazePosXin+1;
+                    mazeCoordsArr[1] = mazePosYin;
+                    break;
+                default:                        
+
+            }
+            break;
+        case 3://west
+            switch(moveDirectionin)
+            {
+                case 0: //forward
+                    mazeCoordsArr[0] = mazePosXin-1;
+                    mazeCoordsArr[1] = mazePosYin;
+                    break;
+                case 1: //right                            
+                    mazeCoordsArr[0] = mazePosXin;
+                    mazeCoordsArr[1] = mazePosYin-1;
+                    break;
+                case 2: //backwards
+                    mazeCoordsArr[0] = mazePosXin+1;
+                    mazeCoordsArr[1] = mazePosYin;
+                    break;
+                case 3: //left                            
+                    mazeCoordsArr[0] = mazePosXin;
+                    mazeCoordsArr[1] = mazePosYin+1;
+                    break;
+                default:
+            }
+            break;
+        default:
+            
+    }
+
+    return mazeCoordsArr;
+}
+
+/**
+ * Clears everything from the main canvas
+ */
+function clearCanvas() {
+
+    // clear the canvas using clearRect()
+
+    context.beginPath();
+    context.clearRect(0, 0, 600, 600);
+    context.stroke();
+
+};
+
+/**
+ * Clears everything from the map canvas
+ */
+function clearMapCanvas() {
+
+    // clear the canvas using clearRect()
+
+    mapcontext.beginPath();
+    mapcontext.clearRect(0, 0, 200, 200);
+    mapcontext.stroke();
+
+};
+
+/**
+ * facilitates the drawing of the map onto the map canvas
+ */
+function drawMap()
+{
+    mazeArr.forEach((itemY, indexY, arrayY) => itemY.forEach((itemX, indexX, arrayX) => drawMapBlock(indexX, indexY)));
+}
+
+/**
+ * draws the individual maze blocks onto the map canvas
+ * 
+ * @param  {} posX
+ * @param  {} posY
+ */
+function drawMapBlock(posX, posY)
+{
+    mapcontext.beginPath();
+    switch (mazeArr[posY][posX])
+    {
+        case 0:
+            //nothing to draw
+            break;
+        case 1:
+            //wall
+            mapcontext.rect(posX*10, posY*10, 10, 10);                    
+            mapcontext.lineWidth = 1;
+            mapcontext.fillStyle = 'black';
+            mapcontext.fill();
+            mapcontext.strokeStyle = 'black';
+            mapcontext.stroke();
+            break;
+    }
+    // draw your position on map plus direction
+    mapcontext.beginPath();
+    mapcontext.rect(mazePosX*10, mazePosY*10, 10, 10);
+    mapcontext.fillStyle = 'yellow';
+    mapcontext.fill();
+    mapcontext.strokeStyle='yellow';
+    mapcontext.stroke();
+
+    mapcontext.beginPath();
+    switch (mazeDirection)
+    {
+        case 0:
+            mapcontext.rect(mazePosX*10, mazePosY*10, 10, 2);
+            break;
+        case 1:
+            mapcontext.rect((mazePosX*10)+8, mazePosY*10, 2, 10);
+            break;
+        case 2:
+            mapcontext.rect(mazePosX*10, (mazePosY*10)+8, 10, 2);
+            break;
+        case 3:
+            mapcontext.rect(mazePosX*10, mazePosY*10, 2, 10);
+            break;
+        default:
+    }
+    mapcontext.fillStyle = 'red';
+    mapcontext.fill();
+    mapcontext.strokeStyle='red';
+    mapcontext.stroke();
+
+}
+
+/**
+ * draws an open door block to the main world view canvas
+ * 
+ * @param  {Number} offset - x position offset to draw to screen
+ */
+function drawOpenDoor(offset) {
+    
+    context.beginPath();
+    context.rect(0+offset,100,200,200);
+    context.lineWidth=2;
+    context.strokeStyle = 'black';
+    context.stroke();
+
+    context.beginPath();
+    context.rect(50+offset,150,100,150);                    
+    context.lineWidth=2;
+    context.strokeStyle = 'black';
+    context.stroke();
+
+    context.beginPath();
+    context.rect(50+offset,150,10,150);        
+    context.fillStyle = "blue";
+    context.fill();
+    context.lineWidth=2;
+    context.strokeStyle = 'black';
+    context.stroke();
+
+    context.beginPath();
+    context.arc(offset+45,225,5,2 * Math.PI, false);        
+    context.fillStyle = "white";
+    context.fill();
+    context.lineWidth=2;
+    context.strokeStyle = 'black';
+    context.stroke();
+
+}
+
+/**
+ * draws a closed door block to the main world view canvas
+ * 
+ * @param  {Number} offset - x offset position to draw to the screen
+ */
+function drawDoor(offset) {
+
+    context.beginPath();
+    context.rect(0+offset,100,200,200);
+    context.lineWidth=2;
+    context.strokeStyle = 'black';
+    context.stroke();
+
+    context.beginPath();
+    context.rect(50+offset,150,100,150);        
+    context.fillStyle = "blue";
+    context.fill();
+    context.lineWidth=2;
+    context.strokeStyle = 'black';
+    context.stroke();
+
+    context.beginPath();
+    context.arc(140+offset,225,5,2 * Math.PI, false);        
+    context.fillStyle = "white";
+    context.fill();
+    context.lineWidth=2;
+    context.strokeStyle = 'black';
+    context.stroke();
+}
+
+/**
+ * draw wall block to the main world view canvas
+ * 
+ * @param  {Number} offset - x offset position to draw to the screen
+ */
+function drawWall(offset) {
+
+    context.beginPath();
+    context.rect(0+offset,100,200,200);
+    context.lineWidth=2;
+    context.strokeStyle = 'black';
+    context.stroke();
+
+}
+
+/**
+ * placeholder for winning scene
+ */
+function drawWinningScene() {
+    //this.clearMobCanvas();
+    context.font = "99px Arial";
+    context.fillStyle = '#000000';        
+    context.fillText("You Won!!!", 5, 100);
+}
+
+/**
+ * placeholder for losing scene
+ */
+function drawLosingScene() {
+    context.font = "99px Arial";
+    context.fillStyle = '#000000';        
+    context.fillText("You Lost!!!", 5, 100);
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="itemHealthPotion.html">itemHealthPotion</a></li><li><a href="itemMagicalPendant.html">itemMagicalPendant</a></li><li><a href="mobYellowBlob.html">mobYellowBlob</a></li><li><a href="playerClass.html">playerClass</a></li><li><a href="weaponWoodenSword.html">weaponWoodenSword</a></li></ul><h3>Global</h3><ul><li><a href="global.html#clearCanvas">clearCanvas</a></li><li><a href="global.html#clearMapCanvas">clearMapCanvas</a></li><li><a href="global.html#drawDescription">drawDescription</a></li><li><a href="global.html#drawDoor">drawDoor</a></li><li><a href="global.html#drawLosingScene">drawLosingScene</a></li><li><a href="global.html#drawMap">drawMap</a></li><li><a href="global.html#drawMapBlock">drawMapBlock</a></li><li><a href="global.html#drawOpenDoor">drawOpenDoor</a></li><li><a href="global.html#drawScene">drawScene</a></li><li><a href="global.html#drawWall">drawWall</a></li><li><a href="global.html#drawWinningScene">drawWinningScene</a></li><li><a href="global.html#moveViaButtons">moveViaButtons</a></li><li><a href="global.html#returnNewCoords">returnNewCoords</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri Mar 11 2022 15:20:43 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
