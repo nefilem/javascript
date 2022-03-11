@@ -3,9 +3,11 @@
 class itemMagicalPendant {
     
     /**
-     * @param  {} owner
-     * @param  {} mainContext
-     * @param  {} playerContext
+     * constructor to create itemMagicalPendant class
+     * 
+     * @param  {var} owner - pointer to created object, either player or mob class
+     * @param  {var} mainContext - pointer to the main world view canvas 
+     * @param  {var} playerContext - pointer to player text canvas
      */
     constructor(owner, mainContext, playerContext) {        
         this._owner = owner;
@@ -23,12 +25,14 @@ class itemMagicalPendant {
     _winningItemFlag = true;
     
     /**
+     * returns the item name as a string
      */
     itemName() {
         return this._itemName;
     }
     
     /**
+     * returns flag as to whether item is a winning item, true if it is, false if not
      */
     winningItem() {
         return this._winningItemFlag;
@@ -38,9 +42,11 @@ class itemMagicalPendant {
 class itemHealthPotion {
     
     /**
-     * @param  {} owner
-     * @param  {} mainContext
-     * @param  {} playerContext
+     * constructor to create itemHealthPotion class
+     * 
+     * @param  {var} owner - pointer to created object, either player or mob class
+     * @param  {var} mainContext - pointer to the main world view canvas 
+     * @param  {var} playerContext - pointer to player text canvas           
      */
     constructor(owner, mainContext, playerContext) {        
         this._owner = owner;
@@ -52,26 +58,31 @@ class itemHealthPotion {
     _winningItemFlag = false;
     
     /**
+     * called when the user wants to use this item, then interacts with player class to effects changes, won't effect mob class
      */
     useItem() {
         // this item will restore owners health
         this._owner.hitPoints = this._owner.maxHitPoints();
-        this.drawItemDescription("You replenish your hit points to your maximum.")
+        this.drawItemDescription("You replenish your hit points to your maximum.");
     }
     
     /**
+     * returns the name of the item as a string
      */
     itemName() {
         return this._itemName;
     }
     
     /**
+     * returns flag as to whether item is a winning item, true if it is, false if not
      */
     winningItem() {
         return this._winningItemFlag;
     }
 
     /**
+     * draws text to player/mob related canvas
+     * 
      * @param  {String} textToDraw - text to draw in mob canvas area
      */
      drawItemDescription(textToDraw) {
@@ -83,6 +94,7 @@ class itemHealthPotion {
     }
     
     /**
+     * Clears the item related canvas 
      */
     clearItemCanvas() {
 

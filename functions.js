@@ -1,4 +1,6 @@
 /**
+ * This routine is used for the buttons on screen for accessibility purposes/mobile use
+ * 
  * @param  {} buttonID - the id for the button that you want to move using, ie. q, w, e, a, s, d
  */
  function moveViaButtons(buttonID) {
@@ -80,6 +82,7 @@
 }
 
 /**
+ * This routine controls the drawing of the players view on the world.
  */
 function drawScene() {
     let tmpVarLeft = -1;
@@ -177,6 +180,8 @@ function drawScene() {
 }
 
 /**
+ * draw the text relating to the players view on the world
+ * 
  * @param  {} xPos
  * @param  {} yPos
  */
@@ -209,6 +214,8 @@ function drawDescription(xPos, yPos)
 }
 
 /**
+ * Updates the player position based on direction facing, movement direction.
+ * 
  * @param  {} mazePosXin
  * @param  {} mazePosYin
  * @param  {} mazeOrientationin
@@ -317,6 +324,7 @@ function returnNewCoords(mazePosXin, mazePosYin, mazeOrientationin, moveDirectio
 }
 
 /**
+ * Clears everything from the main canvas
  */
 function clearCanvas() {
 
@@ -329,6 +337,7 @@ function clearCanvas() {
 };
 
 /**
+ * Clears everything from the map canvas
  */
 function clearMapCanvas() {
 
@@ -341,6 +350,7 @@ function clearMapCanvas() {
 };
 
 /**
+ * facilitates the drawing of the map onto the map canvas
  */
 function drawMap()
 {
@@ -348,6 +358,8 @@ function drawMap()
 }
 
 /**
+ * draws the individual maze blocks onto the map canvas
+ * 
  * @param  {} posX
  * @param  {} posY
  */
@@ -402,7 +414,9 @@ function drawMapBlock(posX, posY)
 }
 
 /**
- * @param  {} offset
+ * draws an open door block to the main world view canvas
+ * 
+ * @param  {Number} offset - x position offset to draw to screen
  */
 function drawOpenDoor(offset) {
     
@@ -437,7 +451,9 @@ function drawOpenDoor(offset) {
 }
 
 /**
- * @param  {} offset
+ * draws a closed door block to the main world view canvas
+ * 
+ * @param  {Number} offset - x offset position to draw to the screen
  */
 function drawDoor(offset) {
 
@@ -465,7 +481,9 @@ function drawDoor(offset) {
 }
 
 /**
- * @param  {} offset
+ * draw wall block to the main world view canvas
+ * 
+ * @param  {Number} offset - x offset position to draw to the screen
  */
 function drawWall(offset) {
 
@@ -478,6 +496,7 @@ function drawWall(offset) {
 }
 
 /**
+ * placeholder for winning scene
  */
 function drawWinningScene() {
     //this.clearMobCanvas();
@@ -487,6 +506,7 @@ function drawWinningScene() {
 }
 
 /**
+ * placeholder for losing scene
  */
 function drawLosingScene() {
     context.font = "99px Arial";

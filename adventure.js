@@ -1,25 +1,31 @@
-let objcanvas = document.getElementById("mainCanvas");
+// variables setting up the main canvas to draw the world view onto
+let objcanvas = document.getElementById("mainCanvas"); 
 let context = objcanvas.getContext('2d');                
 
+// variables setting up the map canvas to draw the mini map onto
 let objmapcanvas = document.getElementById("mapCanvas");
 let mapcontext= objmapcanvas.getContext('2d');                
 
+// variables setting up the room canvas to draw the room related text
 let objroomcanvas = document.getElementById("roomDescCanvas");
 let roomContext= objroomcanvas.getContext('2d'); 
 
+// variables setting up the player canvas to draw the player related text
 let objplayercanvas = document.getElementById("playerDescCanvas");
 let playerContext = objplayercanvas.getContext('2d');
 
+// variables setting up the mob canvas to draw the mob related text
 let objmobcanvas = document.getElementById("mobDescCanvas");
 let mobContext = objmobcanvas.getContext('2d');    
 
 let mazeDirection = 0; // 0 is north, 1 is east, 2 is south, 3 is west.
 
+// x and y position for the player within the world
 let mazePosX = 1;
 let mazePosY = 1;
 let mazePosZ = 1; // would be which floor effectively if there were stairs.
 
- // create a new mob in a corridor for testing
+ // setup a test mob, test items, test player, weapon for player to use and a health potion
  let enemy = new mobYellowBlob(7, 1, context, mobContext);
  enemy.createItem(new itemMagicalPendant(enemy, context, playerContext));
  let player = new playerClass(context, playerContext);
@@ -37,6 +43,7 @@ $(function() {
     $('#mainCanvas').focus();
 });
 
+//  setup key bindings for controlling the game
 $('#mainCanvas').on('keydown', function(event) {    
     let mazeCoordsArr = [];
     let ignoreRedraw = false; // this is so we can skip scene draw at bottom of this in certain circumstances.

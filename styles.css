@@ -8,3 +8,12 @@ body {
 #mapCanvas {
     background-color: #aabbcc;
 }
+#roomDescriptionContainer {
+    background-color: #bbaacc;
+}
+#mobDescriptionContainer {
+    background-color: #ccbbaa;
+}
+#playerDescriptionContainer {
+    background-color: #ccaabb;
+}

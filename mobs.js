@@ -24,30 +24,32 @@
     _hitPoints = 100; // how much health the mob has before it dies
     _status = 1; // 1 = alive, 0 = dead
 
-    _damage = 33;
+    _damage = 33; // stores the damage done per hit to the player (or other mobs if inter mob fighting functionality is implemented)
 
     _aggressive = false; // starts off none agressive, attack it and it will attack back whilst you are near
                          // initial attack will trigger off a timer that calls the attack routine, this will
                          // only stop if the mob dies or the player dies.
     _aggressiveCount = 0;    
 
-    _enemy = null;
+    _enemy = null; // will store the enemy (player/mob eventually) that this mob currently has their sights set on.
 
     /**
-     * Returns the x position in the maze
+     * Returns the x position in the maze as a numnber
      */
     xPos() {
         return Number(this._xPos);
     }
 
     /**     
-     * Returns the y position in the maze
+     * Returns the y position in the maze as a number
      */
     yPos() {
         return Number(this._yPos);        
     } 
 
     /**
+     * Set this mobs sights on a player/enemy, currently will only be a player
+     * 
      * @param  {} player
      */
     setAggro(player) {
@@ -56,6 +58,7 @@
     }
 
     /**
+     * this routine is called when this mob attacks a targetted player, could eventually be extended to attack mob too
      */
     attackPlayer() {
         if (this._aggressive == true && this._enemy != null) {
@@ -77,7 +80,8 @@
     /**
      * When attacking with a weapon this function is called, calculates whether the resulting damage 
      * kills the mob or not and also updates the descriptive text.
-     * @param  {} damage - this is the amount of damage done when attacked, passed from weapon class
+     * 
+     * @param  {Number} damage - this is the amount of damage done when attacked, passed from weapon class
      */
     attacked(damage, enemy) {
         this._hitPoints = this._hitPoints - damage;
@@ -96,12 +100,15 @@
     }
 
     /**
+     * returns true if mob is alive, false if dead
      */
     isAlive() {
         return (this._status == 1?true:false); // return true if status = 1 (mob is alive) or false if status = 0 (mob is dead)
     }
     
     /**
+     * creates an item and push it into the loottablearray array
+     * 
      * @param  {} classObj - item class to add to the loot table for this mob
      */
     createItem(classObj) {

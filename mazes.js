@@ -1,3 +1,5 @@
+
+// This array stores the maze layout, each number represents a block type, ie. 1 is a plain wall, 2 is a closed door, 3 is an open door.
         let mazeArr = new Array();
         mazeArr[0]  = new Array(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
         mazeArr[1]  = new Array(1,0,0,0,0,1,0,0,0,0,2,0,0,0,0,0,0,0,0,1);
@@ -20,6 +22,7 @@
         mazeArr[18] = new Array(1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1);
         mazeArr[19] = new Array(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
+// This array stores each squares descriptive text pointer, each number is a pointer to a descriptive text within the mazeRoomDescriptions array.        
         let mazeRoomDescriptionsIDs = Array();
         mazeRoomDescriptionsIDs[0]  = Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         mazeRoomDescriptionsIDs[1]  = Array(0, 1, 1, 1, 1, 0, 6, 6, 6, 7,14, 2, 2, 2,10,11,11,11,11, 0);
@@ -42,6 +45,7 @@
         mazeRoomDescriptionsIDs[18] = Array(0,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14, 0);
         mazeRoomDescriptionsIDs[19] = Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
+// This array stores each descriptive text relating to the pointers setup in the mazeRoomDescriptionsIDs array        
         let mazeRoomDescriptions = Array();
         mazeRoomDescriptions[0]  = Array("");
         mazeRoomDescriptions[1]  = Array("Before you is a darkly lit entry hall, the floors are very dusty.");
